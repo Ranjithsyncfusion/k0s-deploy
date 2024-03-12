@@ -23,8 +23,8 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: azurefile-csi-nfs
   nfs:
-    path: /<storage_account_name>/<fileshare_name>/<folder_name>
-    server: <storage_account_name>.file.core.windows.net
+    path: /salesdeskstagingdemo/new
+    server: salesdeskstagingdemo.file.core.windows.net
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

@@ -13,9 +13,11 @@ spec:
       labels:
         app: id-web
     spec:
+      nodeSelector:  # Assuming NODE_SELECTOR_DEPT is set as an environment variable
+        dept: node
       containers:
       - name: id-web-container
-        image: gcr.io/boldbi-294612/bold-identity:7.2.8
+        image: gcr.io/boldbi-294612/bold-identity:7.4.11
         ports:
         - containerPort: 80
         resources:
@@ -65,6 +67,8 @@ spec:
       labels:
         app: id-api
     spec:
+      nodeSelector:
+        dept: second
       initContainers:
       - name: id-web-initialization
         image: busybox:1.28
@@ -75,7 +79,7 @@ spec:
           name: id-api-volume
       containers:
       - name: id-api-container
-        image: gcr.io/boldbi-294612/bold-identity-api:7.2.8
+        image: gcr.io/boldbi-294612/bold-identity-api:7.4.11
         ports:
         - containerPort: 80
         resources:
@@ -121,6 +125,8 @@ spec:
       labels:
         app: id-ums
     spec:
+      nodeSelector:
+        dept: second
       initContainers:
       - name: id-web-initialization
         image: busybox:1.28
@@ -131,7 +137,7 @@ spec:
           name: id-ums-volume
       containers:
       - name: id-ums-container
-        image: gcr.io/boldbi-294612/bold-ums:7.2.8
+        image: gcr.io/boldbi-294612/bold-ums:7.4.11
         ports:
         - containerPort: 80
         resources:
@@ -189,6 +195,8 @@ spec:
       labels:
         app: bi-web
     spec:
+      nodeSelector:
+        dept: second
       initContainers:
       - name: id-web-initialization
         image: busybox:1.28
@@ -199,7 +207,7 @@ spec:
           name: bi-web-volume
       containers:
       - name: bi-web-container
-        image: gcr.io/boldbi-294612/boldbi-server:7.2.8
+        image: gcr.io/boldbi-294612/boldbi-server:7.4.11
         ports:
         - containerPort: 80
         resources:
@@ -245,6 +253,8 @@ spec:
       labels:
         app: bi-api
     spec:
+      nodeSelector:
+        dept: second
       initContainers:
       - name: id-web-initialization
         image: busybox:1.28
@@ -255,7 +265,7 @@ spec:
           name: bi-api-volume
       containers:
       - name: bi-api-container
-        image: gcr.io/boldbi-294612/boldbi-server-api:7.2.8
+        image: gcr.io/boldbi-294612/boldbi-server-api:7.4.11
         ports:
         - containerPort: 80
         resources:
@@ -301,6 +311,8 @@ spec:
       labels:
         app: bi-jobs
     spec:
+      nodeSelector:
+        dept: second
       initContainers:
       - name: id-web-initialization
         image: busybox:1.28
@@ -311,7 +323,7 @@ spec:
           name: bi-jobs-volume
       containers:
       - name: bi-jobs-container
-        image: gcr.io/boldbi-294612/boldbi-server-jobs:7.2.8
+        image: gcr.io/boldbi-294612/boldbi-server-jobs:7.4.11
         ports:
         - containerPort: 80
         resources:
@@ -357,6 +369,8 @@ spec:
       labels:
         app: bi-dataservice
     spec:
+      nodeSelector:
+        dept: second
       initContainers:
       - name: id-web-initialization
         image: busybox:1.28
@@ -367,7 +381,7 @@ spec:
           name: bi-dataservice-volume
       containers:
       - name: bi-dataservice-container
-        image: gcr.io/boldbi-294612/boldbi-designer:7.2.8
+        image: gcr.io/boldbi-294612/boldbi-designer:7.4.11
         ports:
         - containerPort: 80
         env:
@@ -389,6 +403,10 @@ spec:
           value: k8s
         - name: AppSettings__locale-path
           value: ""
+        - name: AppSettings__EnableQueryMetricsInDebugFiles
+          value: "false"
+        - name: AppSettings__EnableQueryMetricsWithQueryInDebugFiles
+          value: "false"
         resources:
           requests:
             cpu: 250m
@@ -429,6 +447,8 @@ spec:
       labels:
         app: bold-etl
     spec:
+      nodeSelector:
+        dept: second
       initContainers:
       - name: id-web-initialization
         image: busybox:1.28
@@ -439,7 +459,7 @@ spec:
           name: bold-etl-volume
       containers:
       - name: bold-etl-container
-        image: gcr.io/boldbi-294612/bold-etl:7.2.8
+        image: gcr.io/boldbi-294612/bold-etl:7.4.11
         ports:
         - containerPort: 80
         env:

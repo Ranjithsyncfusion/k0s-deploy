@@ -1,0 +1,157 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: bold-services
+
+resources:
+  - ../boldcommon-manifest
+
+configMapGenerator:
+- name: bold-web-config
+  namespace: bold-services
+  literals:
+    - APP_BASE_URL=https://salesdesk-demo-staging.boldbidemo.com
+    - BOLD_SERVICES_HOSTING_ENVIRONMENT=k8s
+    - INSTALL_OPTIONAL_LIBS=mongodb,mysql,influxdb,snowflake,oracle,clickhouse,google
+
+
+images:
+  - name: gcr.io/boldbi-294612/boldbi-server-api
+    newTag: 7.4.11
+    
+  - name: gcr.io/boldbi-294612/boldbi-server-jobs
+    newTag: 7.4.11
+
+  - name: gcr.io/boldbi-294612/boldbi-server
+    newTag: 7.4.11
+
+  - name: gcr.io/boldbi-294612/boldbi-designer
+    newTag: 7.4.11
+
+  - name: gcr.io/boldbi-294612/bold-etl
+    newTag: 7.4.11
+    
+  - name: gcr.io/boldbi-294612/bold-identity-api
+    newTag: 7.4.11
+   
+  - name: gcr.io/boldbi-294612/bold-ums
+    newTag: 7.4.11
+
+  - name: gcr.io/boldbi-294612/bold-identity
+    newTag: 7.4.11
+
+patches:
+- target:
+    kind: Deployment
+    namespace: bold-services
+    name: id-web-deployment
+  patch: |-
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: id-web-deployment
+    spec:
+      template:
+        spec:
+          nodeSelector: 
+            dept: firstnodepool
+patches:
+- target:
+    kind: Deployment
+    labelSelector: app= id-api
+  patch: |-
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: id-web-deployment
+    spec:
+      template:
+        spec:
+          nodeSelector: 
+            dept: firstnodepool
+patches:
+- target:
+    kind: Deployment
+    labelSelector: app= id-ums
+  patch: |-
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: id-web-deployment
+    spec:
+      template:
+        spec:
+          nodeSelector: 
+            dept: firstnodepool
+patches:
+- target:
+    kind: Deployment
+    labelSelector: app= bi-web
+  patch: |-
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: id-web-deployment
+    spec:
+      template:
+        spec:
+          nodeSelector: 
+            dept: firstnodepool
+patches:
+- target:
+    kind: Deployment
+    labelSelector: app= bi-api
+  patch: |-
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: id-web-deployment
+    spec:
+      template:
+        spec:
+          nodeSelector: 
+            dept: firstnodepool
+patches:
+- target:
+    kind: Deployment
+    labelSelector: app= bi-jobs
+  patch: |-
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: id-web-deployment
+    spec:
+      template:
+        spec:
+          nodeSelector: 
+            dept: firstnodepool   
+
+patches:
+- target:
+    kind: Deployment
+    labelSelector: app= bi-dataservice
+  patch: |-
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: id-web-deployment
+    spec:
+      template:
+        spec:
+          nodeSelector: 
+            dept: firstnodepool    
+
+patches:
+- target:
+    kind: Deployment
+    labelSelector: app= bold-etl
+  patch: |-
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: id-web-deployment
+    spec:
+      template:
+        spec:
+          nodeSelector: 
+            dept: firstnodepool             

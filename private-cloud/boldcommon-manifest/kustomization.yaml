@@ -1,0 +1,76 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  #- nginx/deployment.yaml
+
+  #- azure-file-csi/deployment.yaml
+  
+  - boldbi/namespace.yaml
+  - boldbi/configuration/pvclaim_onpremise.yaml
+  #- boldbi/configuration/pvclaim_azure_nfs.yaml
+  - boldbi/configuration/log4net_config.yaml
+  - boldbi/configuration/root-user-details.yaml
+  - boldbi/configuration/version-config.yaml
+  - boldbi/configuration/branding_config.yaml
+  - boldbi/secrets/license-key-secret.yaml
+  - boldbi/secrets/bingmap-secrets.yaml
+  - boldbi/secrets/db-server-secret.yaml
+  - boldbi/service.yaml
+  - boldbi/deployment.yaml
+  #- boldbi/hpa.yaml
+
+  - boldbi/ingress.yaml
+
+  - reports/deployment.yaml
+  - reports/service.yaml
+
+
+
+patches:
+- target:
+    kind: Deployment
+    namespace: bold-services
+    name: '^id-.*'
+  patch: |-
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: id-deployment
+    spec:
+      template:
+        spec:
+          nodeSelector: 
+            <key>: <Node pool name for ID-deployment>
+            
+- target:
+    kind: Deployment
+    namespace: bold-services
+    name: '^(bi|bold).*'
+  patch: |-
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: bi-deployment
+    spec:
+      template:
+        spec:
+          nodeSelector: 
+            <key>: <Node pool name for BI-deployment>
+ 
+            
+- target:
+    kind: Deployment
+    namespace: bold-services
+    name: '^reports-.*'
+  patch: |-
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: reports-deployment
+    spec:
+      template:
+        spec:
+          nodeSelector: 
+            <key>: <Node pool name for Reports-deployment>
+            
